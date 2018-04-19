@@ -4,7 +4,7 @@ let service;
 let infowindow;
 
 function initialize() {
-  const newYork = new google.maps.LatLng(40.7128, 74.0060);
+  const newYork = new google.maps.LatLng(40.730610, -73.935242);
 
   map = new google.maps.Map(document.getElementById('map'), {
     center: newYork,
@@ -17,8 +17,14 @@ function initialize() {
     query: 'restaurant'
   };
 
+  infowindow = new google.maps.InfoWindow();
   service = new google.maps.places.PlacesService(map);
-  service.textSearch(request, callback);
+  service.nearbySearch({
+    location: newYork,
+    radius: 500,
+    type: ['restaurant']
+  }, callback);
+
 }
 
 function callback(results, status) {
@@ -28,5 +34,18 @@ function callback(results, status) {
       createMarker(results[i]);
     }
   }
+}
+
+function createMarker(place) {
+  var placeLoc = place.geometry.location;
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.geometry.location
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(place.name);
+    infowindow.open(map, this);
+  });
 }
 
