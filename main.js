@@ -10,12 +10,16 @@ function initialize() {
     center: newYork,
     zoom: 15
   });
-
+  
   const request = {
     location: newYork,
     radius: '500',
-    query: 'restaurant'
+    query: 'pizza'
   };
+
+  const input = document.getElementById('pac-input');
+  const searchBox = new google.maps.places.SearchBox(input);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
   infowindow = new google.maps.InfoWindow();
   service = new google.maps.places.PlacesService(map);
@@ -24,7 +28,9 @@ function initialize() {
     radius: 500,
     type: ['restaurant']
   }, callback);
-
+  
+  service = new google.maps.places.PlacesService(map);
+  service.textSearch(request, callback);
 }
 
 function callback(results, status) {
